@@ -6,6 +6,10 @@ const msalInstance = new PublicClientApplication({
   auth: {
     clientId,
   },
+  cache: {
+    cacheLocation: "sessionStorage",
+    storeAuthStateInCookie: false,
+  }
 });
 
 export default msalInstance;
