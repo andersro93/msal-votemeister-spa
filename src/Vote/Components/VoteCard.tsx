@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HowToVoteIcon from '@material-ui/icons/HowToVote';
+import ErrorIcon from '@material-ui/icons/Error';
+import DoneIcon from '@material-ui/icons/Done';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -40,13 +42,15 @@ const useStyles = makeStyles((theme) => ({
 const VoteCard: React.FC<VoteCardProps> = ({ candidate }) => {
   const [voteHasBeenCasted, setVoteHasBeenCasted] = useState<boolean>(false);
   const [voteIsBeingCasted, setVoteIsBeingCasted] = useState<boolean>(false);
+  const [voteHasFailed, setVoteHasFailed] = useState<boolean>(false);
   const classes = useStyles();
 
   const handleOnVoteButtonClick = async () => {
     setVoteIsBeingCasted(true);
-    await votemeisterHttpClient.post<Vote>('/api/votes', { Candidate: candidate.name });
-    setVoteHasBeenCasted(true);
-    setVoteIsBeingCasted(false);
+    await votemeisterHttpClient.post<Vote>('/api/votes', { Candidate: candidate.name })
+      .then(() => setVoteHasBeenCasted(true))
+      .catch(() => setVoteHasFailed(true))
+      .finally(() => setVoteIsBeingCasted(false));
   };
 
   return (
@@ -62,11 +66,17 @@ const VoteCard: React.FC<VoteCardProps> = ({ candidate }) => {
         onClick={handleOnVoteButtonClick}
         disabled={voteHasBeenCasted || voteIsBeingCasted}
       >
-        {!voteIsBeingCasted && (
+        {!voteIsBeingCasted && !voteHasBeenCasted && !voteHasFailed && (
           <>
             <HowToVoteIcon className={classes.icon} />
             Vote
           </>
+        )}
+        {!voteIsBeingCasted && voteHasBeenCasted && (
+          <DoneIcon className={classes.icon} />
+        )}
+        {!voteIsBeingCasted && voteHasFailed && (
+          <ErrorIcon className={classes.icon} />
         )}
         {voteIsBeingCasted && (
           <CircularProgress size={24} />
