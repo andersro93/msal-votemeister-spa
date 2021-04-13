@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { MsalProvider } from '@azure/msal-react';
 
-function App() {
+import msalInstance from './_shared/Msal/MsalInstance';
+
+import FrontPage from './Frontpage/FrontPage';
+import VotePage from './Vote/Pages/VotePage';
+import ResultsPage from './Results/Pages/ResultsPage';
+
+const App: React.FC = () => {
+  msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0] ?? {});
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MsalProvider instance={msalInstance}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact component={FrontPage} />
+          <Route path="/vote" component={VotePage} />
+          <Route path="/results" component={ResultsPage} />
+        </Switch>
+      </BrowserRouter>
+    </MsalProvider>
   );
 }
 
