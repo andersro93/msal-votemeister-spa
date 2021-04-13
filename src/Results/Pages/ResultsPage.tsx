@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import MainLayout from '../../_shared/Layout/MainLayout';
-
 import VoteResult from '../../_shared/Models/VoteResult';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -27,7 +25,7 @@ const ResultsPage: React.FC = () => {
   }, []);
 
   return (
-    <MainLayout>
+    <>
       <Typography variant="h1" className={classes.header}>
         Results
       </Typography>
@@ -55,7 +53,7 @@ const ResultsPage: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-    </MainLayout>
+    </>
   );
 };
 

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import Layout from '../../_shared/Layout/MainLayout';
-
 import votemeisterHttpClient from '../../_shared/HttpClients/VotemeisterHttpClient';
 import Candidate from '../../_shared/Models/Candidate';
 import VoteCard from '../Components/VoteCard';
@@ -27,7 +25,7 @@ const VotePage: React.FC = () => {
   }, []);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h1" className={classes.header}>
         Cast your vote
       </Typography>
@@ -38,7 +36,7 @@ const VotePage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-    </Layout>
+    </>
   );
 };
 

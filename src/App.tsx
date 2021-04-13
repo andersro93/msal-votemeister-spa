@@ -1,32 +1,32 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { MsalProvider } from '@azure/msal-react';
-
-import msalInstance from './_shared/Msal/MsalInstance';
+import { useMsal, useAccount } from '@azure/msal-react';
 
 import FrontPage from './Frontpage/FrontPage';
 import VotePage from './Vote/Pages/VotePage';
 import ResultsPage from './Results/Pages/ResultsPage';
+import Layout from './_shared/Layout/MainLayout';
 
 const App: React.FC = () => {
-  const accounts = msalInstance.getAllAccounts();
+  const { accounts, instance } = useMsal();
+  const account = useAccount(accounts[0] || {});
 
   useEffect(() => {
-    if(accounts && msalInstance.getActiveAccount() === null) {
-      msalInstance.setActiveAccount(accounts[0]);
+    if(account) {
+      instance.setActiveAccount(account);
     }
-  }, [accounts]);
+  }, [instance, account]);
 
   return (
-    <MsalProvider instance={msalInstance}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Layout>
         <Switch>
           <Route path="/" exact component={FrontPage} />
           <Route path="/vote" component={VotePage} />
           <Route path="/results" component={ResultsPage} />
         </Switch>
-      </BrowserRouter>
-    </MsalProvider>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
