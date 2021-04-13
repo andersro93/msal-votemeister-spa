@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { MsalProvider } from '@azure/msal-react';
 
@@ -9,7 +9,13 @@ import VotePage from './Vote/Pages/VotePage';
 import ResultsPage from './Results/Pages/ResultsPage';
 
 const App: React.FC = () => {
-  msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0] ?? {});
+  const accounts = msalInstance.getAllAccounts();
+
+  useEffect(() => {
+    if(accounts && msalInstance.getActiveAccount() === null) {
+      msalInstance.setActiveAccount(accounts[0]);
+    }
+  }, [accounts]);
 
   return (
     <MsalProvider instance={msalInstance}>
